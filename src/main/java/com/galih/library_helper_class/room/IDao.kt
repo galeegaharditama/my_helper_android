@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import com.galih.library_helper_class.toDateTime
 
+//DON'T USE THIS
 interface IDaoOld<T : BaseEntity> {
 
     val formatDateTime: String?
