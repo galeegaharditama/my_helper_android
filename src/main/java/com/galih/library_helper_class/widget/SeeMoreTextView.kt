@@ -13,7 +13,7 @@ import android.view.View
 import androidx.annotation.IdRes
 import androidx.appcompat.widget.AppCompatTextView
 import com.galih.library_helper_class.R
-import com.galih.library_helper_class.getColorCompat
+import com.galih.library_helper_class.extension.getColorCompat
 
 /**
  * Credit to : https://github.com/AhmMhd/SeeMoreTextView-Android

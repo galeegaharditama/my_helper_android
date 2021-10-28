@@ -4,7 +4,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Update
-import com.galih.library_helper_class.toDateTime
+import com.galih.library_helper_class.extension.toDateTime
 
 //DON'T USE THIS
 interface IDaoOld<T : BaseEntity> {

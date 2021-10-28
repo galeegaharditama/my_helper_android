@@ -10,9 +10,9 @@ import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import com.galih.library_helper_class.R
 import com.galih.library_helper_class.databinding.ErrorViewBinding
-import com.galih.library_helper_class.getString
-import com.galih.library_helper_class.gone
-import com.galih.library_helper_class.visible
+import com.galih.library_helper_class.extension.getString
+import com.galih.library_helper_class.extension.gone
+import com.galih.library_helper_class.extension.visible
 
 class ErrorView : RelativeLayout {
     constructor(context: Context) : super(context) {
@@ -51,10 +51,8 @@ class ErrorView : RelativeLayout {
     fun setIsVisible(isVisible:Boolean){
         if (isVisible) {
             this.visible()
-//            this.binding.root.visible()
         } else {
             this.gone()
-//            this.binding.root.gone()
         }
         invalidate()
         requestLayout()
