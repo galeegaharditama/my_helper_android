@@ -9,55 +9,36 @@ import okhttp3.OkHttpClient
 import okhttp3.Response
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import timber.log.Timber
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
-private const val REQUEST_TIMEOUT = 60
-
-fun provideOkHttpClient(context: Context, isDebug: Boolean, apiKey:String?): OkHttpClient.Builder {
+fun provideOkHttpClient(isDebug: Boolean, timeout: Long = 30): OkHttpClient.Builder {
     return OkHttpClient.Builder()
         .apply {
-            apiKey?.let { _token ->
-                addInterceptor {
-                    val original = it.request()
-                    val requestBuilder = original.newBuilder()
-                        .addHeader("Accept", "application/json")
-                    requestBuilder.addHeader("api-token", _token)
-                    val request = requestBuilder.build()
-                    it.proceed(request)
-                }
+            if (isDebug) {
+                val loggingInterceptor =
+                    HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
+                loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+                addInterceptor(loggingInterceptor)
             }
-            addInterceptor(HttpLoggingInterceptor().apply {
-                level = if (isDebug) HttpLoggingInterceptor.Level.BODY
-                else HttpLoggingInterceptor.Level.NONE
-            })
         }
-        .connectTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .readTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .writeTimeout(REQUEST_TIMEOUT.toLong(), TimeUnit.SECONDS)
-        .addInterceptor(ConnectivityInterceptorImpl(context))
+        .connectTimeout(timeout, TimeUnit.SECONDS)
+        .readTimeout(timeout, TimeUnit.SECONDS)
+        .writeTimeout(timeout, TimeUnit.SECONDS)
 }
 
-fun provideRetrofit(okHttpClient: OkHttpClient.Builder, url:String): Retrofit {
+fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient.Builder): Retrofit {
     return Retrofit.Builder()
         .client(okHttpClient.build())
-        .baseUrl(url)
+        .baseUrl(baseUrl)
         .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .addConverterFactory(GsonConverterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create())
         .build()
 }
 
-fun provideLogging(isDebug: Boolean) : Timber.Tree{
-    return if (isDebug){
-        DebugTree()
-    } else{
-        ReleaseTree()
-    }
-}
-
-open class DebugTree : Timber.DebugTree(){
+open class DebugTree : Timber.DebugTree() {
     override fun createStackElementTag(element: StackTraceElement): String? {
         return String.format(
             "Class:%s: Line: %s, Method: %s",
@@ -89,5 +70,6 @@ class ConnectivityInterceptorImpl(context: Context) : ConnectivityInterceptor {
         return chain.proceed(chain.request())
     }
 }
+
 interface ConnectivityInterceptor : Interceptor
 class NoInternetException(message: String = "Tidak Ada Koneksi Internet") : IOException(message)

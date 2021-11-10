@@ -1,5 +1,9 @@
 package com.galih.library_helper_class.extension
 
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStream
+import java.io.InputStreamReader
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -34,4 +38,18 @@ fun String.ucWords(): String {
 fun String.toTimeMillis(pattern: String = "yyyy-MM-dd HH:mm:ss"): Long {
     return SimpleDateFormat(pattern, Locale.US).parse(this)?.time
         ?: throw NullPointerException("Parse Return Null")
+}
+
+fun StringBuilder.getErrorFromNetwork(errorInputStream: InputStream): StringBuilder? {
+    try {
+        val reader = BufferedReader(InputStreamReader(errorInputStream))
+        var line: String?
+        while (reader.readLine().also { line = it } != null) {
+            this.append(line)
+        }
+    } catch (e: IOException) {
+        e.printStackTrace()
+        return null
+    }
+    return this
 }
