@@ -64,7 +64,7 @@ class ProgressBarView : RelativeLayout {
         this.binding.textLoading.setTextColor(
             attributes.getColor(
                 R.styleable.ProgressBarView_textColor,
-                context.getColorCompat(R.color.grey_800)
+                context.getColorCompat(R.color.md_grey_800)
             )
         )
         attributes.recycle()
