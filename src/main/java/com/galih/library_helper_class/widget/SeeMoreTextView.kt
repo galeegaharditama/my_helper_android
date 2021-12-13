@@ -65,7 +65,7 @@ class SeeMoreTextView : AppCompatTextView {
 
     fun isExpanded(): Boolean = this.isExpanded
 
-    //toggle the state
+    // toggle the state
     fun toggle() {
         if (isExpanded) {
             isExpanded = false
@@ -79,13 +79,13 @@ class SeeMoreTextView : AppCompatTextView {
     fun setContent(text: String) {
         orignalContent = text
         this.movementMethod = LinkMovementMethod.getInstance()
-        //show see more
+        // show see more
         if (orignalContent.length >= textMaxLength) {
             collapsedTextWithSeeMoreButton =
                 "${orignalContent.substring(0, textMaxLength)}... $seeMore"
             expandedTextWithSeeMoreButton = "$orignalContent $seeLess"
 
-            //creating spannable strings
+            // creating spannable strings
             collapsedTextSpannable = SpannableString(collapsedTextWithSeeMoreButton)
             expandedTextSpannable = SpannableString(expandedTextWithSeeMoreButton)
 
@@ -126,16 +126,16 @@ class SeeMoreTextView : AppCompatTextView {
                 0
             )
 
-            if (isExpanded)
+            if (isExpanded) {
                 setText(expandedTextSpannable)
-            else
+            } else {
                 setText(collapsedTextSpannable)
+            }
         } else {
-            //to do: don't show see more
+            // to do: don't show see more
             setText(orignalContent)
         }
     }
-
 
     private val clickableSpan = object : ClickableSpan() {
         override fun onClick(widget: View) {
@@ -149,4 +149,3 @@ class SeeMoreTextView : AppCompatTextView {
         }
     }
 }
-

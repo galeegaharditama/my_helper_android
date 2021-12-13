@@ -23,4 +23,3 @@ inline fun <reified VM : ViewModel> Fragment.sharedGraphViewModel(
 fun Fragment.hideSoftKeyboard() {
     activity?.hideSoftKeyboard()
 }
-

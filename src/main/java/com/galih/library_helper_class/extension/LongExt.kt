@@ -1,9 +1,9 @@
 package com.galih.library_helper_class.extension
 
 import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.Date
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 fun Long.toDateTime(pattern: String): String {
     val newFormat = SimpleDateFormat(pattern, Locale.US)

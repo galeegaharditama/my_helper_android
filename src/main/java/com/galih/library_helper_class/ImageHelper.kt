@@ -19,7 +19,7 @@ import java.io.File
 import java.io.IOException
 
 object ImageHelper {
-    fun createFolderWithNomedia(folder: File){
+    fun createFolderWithNomedia(folder: File) {
         val file = File("${folder.path}/.nomedia")
         Log.d(javaClass.simpleName, "${folder.path}/.nomedia $file")
         try {
@@ -42,9 +42,9 @@ object ImageHelper {
         }
         if (success) {
             try {
-                return Compressor.compress(context, imageFile){
+                return Compressor.compress(context, imageFile) {
                     quality(compressQuality)
-                    destination(File(folder,imageFile.name))
+                    destination(File(folder, imageFile.name))
                 }
             } catch (e: Exception) {
                 Log.getStackTraceString(e)
@@ -117,8 +117,9 @@ object ImageHelper {
         val scale = context.resources.displayMetrics.density
 
         var bitmapConfig = bitmap.config
-        if (bitmapConfig == null)
+        if (bitmapConfig == null) {
             bitmapConfig = Bitmap.Config.ARGB_8888
+        }
 
         val mBitmap = bitmap.copy(bitmapConfig, true)
 
@@ -160,5 +161,4 @@ object ImageHelper {
         canvas.restore()
         return mBitmap
     }
-
 }

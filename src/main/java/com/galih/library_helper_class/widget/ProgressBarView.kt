@@ -90,5 +90,4 @@ class ProgressBarView : RelativeLayout {
         invalidate()
         requestLayout()
     }
-
 }

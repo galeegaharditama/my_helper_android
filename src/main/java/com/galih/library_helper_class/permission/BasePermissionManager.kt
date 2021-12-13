@@ -62,7 +62,6 @@ abstract class BasePermissionManager : Fragment() {
   }
 
   protected fun requestPermissions(requestId: Int, vararg permissions: String) {
-
     rationalRequest[requestId]?.let {
       requestPermissions(permissions, requestId)
       rationalRequest.remove(requestId)

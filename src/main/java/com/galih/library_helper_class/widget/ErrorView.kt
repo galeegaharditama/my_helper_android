@@ -48,7 +48,7 @@ class ErrorView : RelativeLayout {
         addView(this.binding.root)
     }
 
-    fun setIsVisible(isVisible:Boolean){
+    fun setIsVisible(isVisible: Boolean) {
         if (isVisible) {
             this.visible()
         } else {
@@ -61,7 +61,7 @@ class ErrorView : RelativeLayout {
     fun setView(
         message: String?,
         case: Int? = 0,
-        @DrawableRes pIcon:Int?=null,
+        @DrawableRes pIcon: Int? = null,
         onReload: (() -> Unit)? = null
     ) {
         this.setIsVisible(true)

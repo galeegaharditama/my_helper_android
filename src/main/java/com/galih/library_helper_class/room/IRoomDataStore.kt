@@ -5,7 +5,7 @@ import androidx.sqlite.db.SimpleSQLiteQuery
 import androidx.sqlite.db.SupportSQLiteQuery
 
 interface IRoomDataStore<Entity> {
-    val tableName:String
+    val tableName: String
     fun setQuery(
         selectQuery: String = "SELECT a.* ",
         joinQuery: String = "",

@@ -28,7 +28,6 @@ fun ViewPager2.reduceDragSensitivity(value: Int = 5) {
     touchSlopField.set(recyclerView, touchSlop * value)
 }
 
-
 fun getScreenHeight(): Int {
     return Resources.getSystem().displayMetrics.heightPixels
 }
@@ -101,7 +100,6 @@ fun View.expand(onFinishListener: (() -> Unit)? = null) {
     val a = expandAction(this)
     a.setAnimationListener(object : Animation.AnimationListener {
         override fun onAnimationStart(p0: Animation?) {
-
         }
 
         override fun onAnimationEnd(p0: Animation?) {

@@ -6,7 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Update
 import com.galih.library_helper_class.extension.toDateTime
 
-//DON'T USE THIS
+// DON'T USE THIS
 interface IDaoOld<T : BaseEntity> {
 
     val formatDateTime: String?
@@ -49,18 +49,17 @@ interface IDaoOld<T : BaseEntity> {
     }
 
     @Delete
-    suspend fun delete(model:T)
+    suspend fun delete(model: T)
 
     suspend fun safeDelete(model: T) {
         model.status = 0
         this.updateWithTimeStamp(model, formatDateTime)
     }
-
 }
 
 abstract class IDao<T : BaseEntity>() {
-    private var formatDateTime:String? = null
-    constructor(pattern:String):this(){
+    private var formatDateTime: String? = null
+    constructor(pattern: String) : this() {
         this.formatDateTime = pattern
     }
 
@@ -102,11 +101,10 @@ abstract class IDao<T : BaseEntity>() {
     }
 
     @Delete
-    abstract suspend fun delete(model:T)
+    abstract suspend fun delete(model: T)
 
     suspend fun safeDelete(model: T) {
         model.status = 0
         this.updateWithTimeStamp(model, formatDateTime)
     }
-
 }

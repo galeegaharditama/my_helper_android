@@ -6,7 +6,6 @@ import androidx.viewbinding.ViewBinding
 import kotlin.properties.ReadOnlyProperty
 import kotlin.reflect.KProperty
 
-
 /**
  * More Info at : https://vsukharew.medium.com/android-view-binding-less-boilerplate-more-delegate-69920216f063
  **/
