@@ -1,0 +1,22 @@
+package com.galih.library.viewbinding
+
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.viewbinding.ViewBinding
+
+/**
+ * More Info at : https://vsukharew.medium.com/android-view-binding-less-boilerplate-more-delegate-69920216f063
+ **/
+
+open class ViewBindingProperty<T : ViewBinding> : LifecycleObserver {
+    protected var binding: T? = null
+    protected var lifecycle: Lifecycle? = null
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    fun onDestroy() {
+        lifecycle?.removeObserver(this)
+        lifecycle = null
+        binding = null
+    }
+}
