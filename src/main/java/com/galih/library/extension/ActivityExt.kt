@@ -5,6 +5,8 @@ import android.content.Context
 import android.graphics.Rect
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 
 /**
  * Extension method to provide hide keyboard for [Activity].
@@ -43,4 +45,14 @@ fun Activity.isKeyboardVisible(): Boolean {
 
     // If the difference is not 0 we assume that the keyboard is currently visible.
     return diff != 0
+}
+
+/**
+ * Initiate a fragment in an [FragmentActivity]
+ */
+fun FragmentActivity.initScreen(containerId: Int, fragment: Fragment, tag: String? = null) {
+    supportFragmentManager
+        .beginTransaction()
+        .add(containerId, fragment, tag)
+        .commit()
 }
