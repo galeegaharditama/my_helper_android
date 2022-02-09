@@ -9,10 +9,10 @@ import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import androidx.annotation.DrawableRes
 import com.galih.library.R
+import com.galih.library.databinding.ErrorViewBinding
 import com.galih.library.extension.getString
 import com.galih.library.extension.gone
 import com.galih.library.extension.visible
-import com.galih.library_helper_class.databinding.ErrorViewBinding
 
 class ErrorView : RelativeLayout {
     constructor(context: Context) : super(context) {
@@ -108,5 +108,5 @@ class ErrorView : RelativeLayout {
 }
 
 enum class ErrorViewType {
-    PERMISSION, GPS_INACTIVE, CONNECTION_PROBLEM, DATA_EMPTY
+    PERMISSION, GPS_INACTIVE, CONNECTION_PROBLEM, DATA_EMPTY, UNKNOWN
 }

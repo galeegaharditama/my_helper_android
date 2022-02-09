@@ -8,11 +8,11 @@ import android.view.Gravity
 import android.view.LayoutInflater
 import android.widget.RelativeLayout
 import com.galih.library.R
+import com.galih.library.databinding.LoadingViewBinding
 import com.galih.library.extension.getColorCompat
 import com.galih.library.extension.getString
 import com.galih.library.extension.gone
 import com.galih.library.extension.visible
-import com.galih.library_helper_class.databinding.LoadingViewBinding
 
 class ProgressBarView : RelativeLayout {
 
