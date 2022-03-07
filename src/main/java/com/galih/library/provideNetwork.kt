@@ -4,7 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import com.galih.library.extension.isNetworkConnected
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
+import com.galih.library.remote.NetworkResponseAdapterFactory
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -19,79 +19,83 @@ import javax.net.ssl.SSLContext
 import javax.net.ssl.X509TrustManager
 
 fun provideOkHttpClient(isDebug: Boolean, timeout: Long = 30): OkHttpClient.Builder {
-    val sslContext = SSLContext.getInstance("SSL")
-    sslContext.init(null, trustAllCerts, java.security.SecureRandom())
-    return OkHttpClient.Builder()
-        .apply {
-            if (isDebug) {
-                val loggingInterceptor =
-                    HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
-                loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
-                addInterceptor(loggingInterceptor)
-            }
-        }
-        .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0])
-        .connectTimeout(timeout, TimeUnit.SECONDS)
-        .readTimeout(timeout, TimeUnit.SECONDS)
-        .writeTimeout(timeout, TimeUnit.SECONDS)
+  val sslContext = SSLContext.getInstance("SSL")
+  sslContext.init(null, trustAllCerts, java.security.SecureRandom())
+  return OkHttpClient.Builder()
+    .apply {
+      if (isDebug) {
+        val loggingInterceptor =
+          HttpLoggingInterceptor(HttpLoggingInterceptor.Logger.DEFAULT)
+        loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+        addInterceptor(loggingInterceptor)
+      }
+    }
+    .sslSocketFactory(sslContext.socketFactory, trustAllCerts[0])
+    .connectTimeout(timeout, TimeUnit.SECONDS)
+    .readTimeout(timeout, TimeUnit.SECONDS)
+    .writeTimeout(timeout, TimeUnit.SECONDS)
 }
 
 fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient.Builder): Retrofit {
-    return Retrofit.Builder()
-        .client(okHttpClient.build())
-        .baseUrl(baseUrl)
-        .addCallAdapterFactory(CoroutineCallAdapterFactory())
-        .addConverterFactory(MoshiConverterFactory.create())
-        .build()
+  return Retrofit.Builder()
+    .client(okHttpClient.build())
+    .baseUrl(baseUrl)
+    .addCallAdapterFactory(NetworkResponseAdapterFactory())
+    .addConverterFactory(MoshiConverterFactory.create())
+    .build()
 }
 
 open class DebugTree : Timber.DebugTree() {
-    override fun createStackElementTag(element: StackTraceElement): String? {
-        return String.format(
-            "Class:%s: Line: %s, Method: %s",
-            super.createStackElementTag(element),
-            element.lineNumber,
-            element.methodName
-        )
-    }
+  override fun createStackElementTag(element: StackTraceElement): String? {
+    return String.format(
+      "Class:%s: Line: %s, Method: %s",
+      super.createStackElementTag(element),
+      element.lineNumber,
+      element.methodName
+    )
+  }
 }
 
 open class ReleaseTree : Timber.Tree() {
-    override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
-        if (priority == Log.VERBOSE || priority == Log.DEBUG) {
-            return
-        }
-
-        // log your crash to your favourite
-        // Sending crash report to Firebase CrashAnalytics
-
-        // FirebaseCrash.report(message);
-        // FirebaseCrash.report(new Exception(message));
+  override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
+    if (priority == Log.VERBOSE || priority == Log.DEBUG) {
+      return
     }
+
+    // log your crash to your favourite
+    // Sending crash report to Firebase CrashAnalytics
+
+    // FirebaseCrash.report(message);
+    // FirebaseCrash.report(new Exception(message));
+  }
 }
 
 class ConnectivityInterceptorImpl(context: Context) : ConnectivityInterceptor {
-    private val appContext = context.applicationContext
-    override fun intercept(chain: Interceptor.Chain): Response {
-        if (!appContext.isNetworkConnected()) throw NoInternetException()
-        return chain.proceed(chain.request())
-    }
+  private val appContext = context.applicationContext
+  override fun intercept(chain: Interceptor.Chain): Response {
+    if (!appContext.isNetworkConnected()) throw NoInternetException()
+    return chain.proceed(chain.request())
+  }
 }
 
 private val trustAllCerts = arrayOf(object : X509TrustManager {
-    @SuppressLint("TrustAllX509TrustManager")
-    override fun checkClientTrusted(
-        chain: Array<out X509Certificate>?,
-        authType: String?
-    ) {}
+  @SuppressLint("TrustAllX509TrustManager")
+  override fun checkClientTrusted(
+      chain: Array<out X509Certificate>?,
+      authType: String?
+  ) {
+    // empty function
+  }
 
-    @SuppressLint("TrustAllX509TrustManager")
-    override fun checkServerTrusted(
-        chain: Array<out X509Certificate>?,
-        authType: String?
-    ) {}
+  @SuppressLint("TrustAllX509TrustManager")
+  override fun checkServerTrusted(
+      chain: Array<out X509Certificate>?,
+      authType: String?
+  ) {
+    // empty function
+  }
 
-    override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
+  override fun getAcceptedIssuers(): Array<X509Certificate> = arrayOf()
 })
 
 interface ConnectivityInterceptor : Interceptor
