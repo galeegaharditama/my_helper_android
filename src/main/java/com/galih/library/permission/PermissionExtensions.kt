@@ -15,7 +15,10 @@
  */
 package com.galih.library.permission
 
+import android.content.Context
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.galih.library.permission.model.PermissionRequest
 
@@ -23,7 +26,7 @@ import com.galih.library.permission.model.PermissionRequest
  * @param permissions vararg of all the permissions for request.
  * @param requestBlock block constructing [PermissionRequest] object for permission request.
  */
-inline fun AppCompatActivity.requestPermissions(
+inline fun AppCompatActivity.reqPermissions(
     vararg permissions: String,
     requestBlock: PermissionRequest.() -> Unit
 ) {
@@ -34,17 +37,22 @@ inline fun AppCompatActivity.requestPermissions(
  * @param permissions vararg of all the permissions for request.
  * @param requestBlock block constructing [PermissionRequest] object for permission request.
  */
-inline fun Fragment.requestPermissions(
+inline fun Fragment.reqPermissions(
     vararg permissions: String,
     requestBlock: PermissionRequest.() -> Unit
 ) {
     PermissionManager.requestPermissions(this, *permissions) { this.requestBlock() }
 }
 
+fun Context.hasPermission(permission: String): Boolean {
+    return ActivityCompat.checkSelfPermission(this, permission) ==
+        PackageManager.PERMISSION_GRANTED
+}
+
 /**
  * Example:
  *
- * requestPermissions(Manifest.permission.CAMERA)
+ * reqPermissions(Manifest.permission.CAMERA)
  * {
  *  requestCode = 123
  *  resultCallback = {
