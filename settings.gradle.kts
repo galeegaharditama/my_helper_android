@@ -26,4 +26,4 @@ refreshVersions {
 
 rootProject.name = "My Helper"
 include(":app")
-include(":my_helper_android")
+include(":helper")

@@ -12,7 +12,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/buildSrc" />
-            <option value="$PROJECT_DIR$/my_helper_android" />
+            <option value="$PROJECT_DIR$/helper" />
           </set>
         </option>
       </GradleProjectSettings>
