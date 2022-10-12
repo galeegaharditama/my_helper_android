@@ -166,7 +166,7 @@ fun View.flyInDown(duration: Long = 200, onFinishListener: (() -> Unit)? = null)
     .setDuration(duration)
     .translationY(0f)
     .setListener(object : AnimatorListenerAdapter() {
-      override fun onAnimationEnd(animation: Animator?) {
+      override fun onAnimationEnd(animation: Animator) {
         onFinishListener?.invoke()
         super.onAnimationEnd(animation)
       }
@@ -184,7 +184,7 @@ fun View.flyOutDown(duration: Long = 200, onFinishListener: (() -> Unit)? = null
     .setDuration(duration)
     .translationY(this.height.toFloat())
     .setListener(object : AnimatorListenerAdapter() {
-      override fun onAnimationEnd(animation: Animator?) {
+      override fun onAnimationEnd(animation: Animator) {
         onFinishListener?.invoke()
         super.onAnimationEnd(animation)
       }

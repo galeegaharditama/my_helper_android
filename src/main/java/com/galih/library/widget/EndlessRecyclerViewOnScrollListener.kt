@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager
  * limitations under the License.
  */
 abstract class EndlessRecyclerViewOnScrollListener(
-    private val layoutManager: RecyclerView.LayoutManager,
-    private val withLoadingView: Boolean = false
+  private val layoutManager: RecyclerView.LayoutManager,
+  private val withLoadingView: Boolean = false
 ) : RecyclerView.OnScrollListener() {
 
   private var currentPage = 0
@@ -102,7 +102,8 @@ abstract class EndlessRecyclerViewOnScrollListener(
      * + the visibleThreshold and need to reload more data.
      */
     if (!loading && lastVisibleItemPosition + sVisibleThreshold > totalItemCount &&
-      !isNetworkRequesting) {
+      !isNetworkRequesting
+    ) {
       currentPage++
       onLoadMore(currentPage, totalItemCount)
       loading = true

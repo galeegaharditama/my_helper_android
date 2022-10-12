@@ -35,29 +35,32 @@ abstract class BasePermissionManager : Fragment() {
   }
 
   override fun onRequestPermissionsResult(
-      requestCode: Int,
-      permissions: Array<out String>,
-      grantResults: IntArray
+    requestCode: Int,
+    permissions: Array<out String>,
+    grantResults: IntArray
   ) {
     if (grantResults.isNotEmpty() &&
-        grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+      grantResults.all { it == PackageManager.PERMISSION_GRANTED }
     ) {
       onPermissionResult(PermissionResult.PermissionGranted(requestCode))
     } else if (permissions.any { shouldShowRequestPermissionRationale(it) }) {
       onPermissionResult(
-          PermissionResult.PermissionDenied(requestCode,
-              permissions.filterIndexed { index, _ ->
-                grantResults[index] == PackageManager.PERMISSION_DENIED
-              }
-          )
+        PermissionResult.PermissionDenied(
+          requestCode,
+          permissions.filterIndexed { index, _ ->
+            grantResults[index] == PackageManager.PERMISSION_DENIED
+          }
+        )
       )
     } else {
       onPermissionResult(
-          PermissionResult.PermissionDeniedPermanently(requestCode,
-              permissions.filterIndexed { index, _ ->
-                grantResults[index] == PackageManager.PERMISSION_DENIED
-              }
-          ))
+        PermissionResult.PermissionDeniedPermanently(
+          requestCode,
+          permissions.filterIndexed { index, _ ->
+            grantResults[index] == PackageManager.PERMISSION_DENIED
+          }
+        )
+      )
     }
   }
 
@@ -70,8 +73,8 @@ abstract class BasePermissionManager : Fragment() {
 
     val notGranted = permissions.filter {
       ContextCompat.checkSelfPermission(
-          requireActivity(),
-          it
+        requireActivity(),
+        it
       ) != PackageManager.PERMISSION_GRANTED
     }.toTypedArray()
 

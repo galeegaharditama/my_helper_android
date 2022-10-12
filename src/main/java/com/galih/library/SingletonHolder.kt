@@ -5,16 +5,17 @@ package com.galih.library
  * https://blog.mindorks.com/how-to-create-a-singleton-class-in-kotlin
  *
  * How to use:
- class YourManager private constructor(context: Context) {
-    init {
-      // do something with context
-    }
- companion object : SingletonHolder<YourManager, Context>(::YourManager)
- }
+class YourManager private constructor(context: Context) {
+init {
+// do something with context
+}
+companion object : SingletonHolder<YourManager, Context>(::YourManager)
+}
  *
  */
 open class SingletonHolder<out T : Any, in A>(creator: (A) -> T) {
   private var creator: ((A) -> T)? = creator
+
   @Volatile
   private var instance: T? = null
 

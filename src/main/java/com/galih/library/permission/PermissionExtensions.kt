@@ -27,10 +27,10 @@ import com.galih.library.permission.model.PermissionRequest
  * @param requestBlock block constructing [PermissionRequest] object for permission request.
  */
 inline fun AppCompatActivity.reqPermissions(
-    vararg permissions: String,
-    requestBlock: PermissionRequest.() -> Unit
+  vararg permissions: String,
+  requestBlock: PermissionRequest.() -> Unit
 ) {
-    PermissionManager.requestPermissions(this, *permissions) { this.requestBlock() }
+  PermissionManager.requestPermissions(this, *permissions) { this.requestBlock() }
 }
 
 /**
@@ -38,15 +38,15 @@ inline fun AppCompatActivity.reqPermissions(
  * @param requestBlock block constructing [PermissionRequest] object for permission request.
  */
 inline fun Fragment.reqPermissions(
-    vararg permissions: String,
-    requestBlock: PermissionRequest.() -> Unit
+  vararg permissions: String,
+  requestBlock: PermissionRequest.() -> Unit
 ) {
-    PermissionManager.requestPermissions(this, *permissions) { this.requestBlock() }
+  PermissionManager.requestPermissions(this, *permissions) { this.requestBlock() }
 }
 
 fun Context.hasPermission(permission: String): Boolean {
-    return ActivityCompat.checkSelfPermission(this, permission) ==
-        PackageManager.PERMISSION_GRANTED
+  return ActivityCompat.checkSelfPermission(this, permission) ==
+    PackageManager.PERMISSION_GRANTED
 }
 
 /**

@@ -57,9 +57,9 @@ class PermissionManager : BasePermissionManager() {
     @JvmStatic
     @MainThread
     inline fun requestPermissions(
-        activity: AppCompatActivity,
-        vararg permissions: String,
-        requestBlock: PermissionRequest.() -> Unit
+      activity: AppCompatActivity,
+      vararg permissions: String,
+      requestBlock: PermissionRequest.() -> Unit
     ) {
       val permissionRequest = PermissionRequest().apply(requestBlock)
       requireNotNull(permissionRequest.requestCode) {
@@ -87,9 +87,9 @@ class PermissionManager : BasePermissionManager() {
     @JvmStatic
     @MainThread
     inline fun requestPermissions(
-        fragment: Fragment,
-        vararg permissions: String,
-        requestBlock: PermissionRequest.() -> Unit
+      fragment: Fragment,
+      vararg permissions: String,
+      requestBlock: PermissionRequest.() -> Unit
     ) {
       val permissionRequest = PermissionRequest().apply(requestBlock)
       requireNotNull(permissionRequest.requestCode) {
@@ -107,10 +107,10 @@ class PermissionManager : BasePermissionManager() {
     }
 
     fun requestPermissions(
-        activityOrFragment: Any,
-        requestId: Int,
-        callback: PermissionResult.() -> Unit,
-        vararg permissions: String
+      activityOrFragment: Any,
+      requestId: Int,
+      callback: PermissionResult.() -> Unit,
+      vararg permissions: String
     ) {
       val fragmentManager = if (activityOrFragment is AppCompatActivity) {
         activityOrFragment.supportFragmentManager
@@ -119,8 +119,8 @@ class PermissionManager : BasePermissionManager() {
       }
       if (fragmentManager.findFragmentByTag(TAG) != null) {
         (fragmentManager.findFragmentByTag(TAG) as PermissionManager)
-            .also { it.callbackMap[requestId] = callback }
-            .requestPermissions(requestId, *permissions)
+          .also { it.callbackMap[requestId] = callback }
+          .requestPermissions(requestId, *permissions)
       } else {
         val permissionManager = PermissionManager()
         fragmentManager.beginTransaction().add(permissionManager, TAG).commitNow()

@@ -7,80 +7,57 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Converter
 import retrofit2.Response
-import java.io.IOException
+import java.lang.reflect.Type
 
-internal class NetworkResponseCall<S : Any, E : Any>(
-    private val delegate: Call<S>,
-    private val errorConverter: Converter<ResponseBody, E>
+/**
+ * A custom [Call] that wraps a regular Retrofit call and adapts the
+ * response to a [NetworkResponse]
+ */
+internal class NetworkResponseCall<S, E>(
+  private val backingCall: Call<S>,
+  private val errorConverter: Converter<ResponseBody, E>,
+  private val successBodyType: Type
 ) : Call<NetworkResponse<S, E>> {
 
-  override fun enqueue(callback: Callback<NetworkResponse<S, E>>) {
-    return delegate.enqueue(object : Callback<S> {
+  override fun enqueue(callback: Callback<NetworkResponse<S, E>>) = synchronized(this) {
+    backingCall.enqueue(object : Callback<S> {
       override fun onResponse(call: Call<S>, response: Response<S>) {
-        val body = response.body()
-        val code = response.code()
-        val error = response.errorBody()
-
-        if (response.isSuccessful) {
-          if (body != null) {
-            callback.onResponse(
-              this@NetworkResponseCall,
-              Response.success(NetworkResponse.Success(body))
-            )
-          } else {
-            // Response is successful but the body is null
-            callback.onResponse(
-              this@NetworkResponseCall,
-              Response.success(NetworkResponse.UnknownError(null))
-            )
-          }
-        } else {
-          val errorBody = when {
-            error == null -> null
-            error.contentLength() == 0L -> null
-            else -> try {
-              errorConverter.convert(error)
-            } catch (ex: Exception) {
-              null
-            }
-          }
-          if (errorBody != null) {
-            callback.onResponse(
-              this@NetworkResponseCall,
-              Response.success(NetworkResponse.ApiError(errorBody, code))
-            )
-          } else {
-            callback.onResponse(
-              this@NetworkResponseCall,
-              Response.success(NetworkResponse.UnknownError(null))
-            )
-          }
-        }
+        val networkResponse = response.asNetworkResponse(successBodyType, errorConverter)
+        callback.onResponse(this@NetworkResponseCall, Response.success(networkResponse))
       }
 
       override fun onFailure(call: Call<S>, throwable: Throwable) {
-        val networkResponse = when (throwable) {
-          is IOException -> NetworkResponse.NetworkError(throwable)
-          else -> NetworkResponse.UnknownError(throwable)
-        }
+        val networkResponse = throwable.asNetworkResponse<S, E>(successBodyType, errorConverter)
         callback.onResponse(this@NetworkResponseCall, Response.success(networkResponse))
       }
     })
   }
 
-  override fun isExecuted() = delegate.isExecuted
-
-  override fun clone() = NetworkResponseCall(delegate.clone(), errorConverter)
-
-  override fun isCanceled() = delegate.isCanceled
-
-  override fun cancel() = delegate.cancel()
-
-  override fun execute(): Response<NetworkResponse<S, E>> {
-    throw UnsupportedOperationException("NetworkResponseCall doesn't support execute")
+  override fun isExecuted(): Boolean = synchronized(this) {
+    backingCall.isExecuted
   }
 
-  override fun request(): Request = delegate.request()
+  override fun clone(): Call<NetworkResponse<S, E>> = NetworkResponseCall(
+    backingCall.clone(),
+    errorConverter,
+    successBodyType
+  )
 
-  override fun timeout(): Timeout = delegate.timeout()
+  override fun isCanceled(): Boolean = synchronized(this) {
+    backingCall.isCanceled
+  }
+
+  override fun cancel() = synchronized(this) {
+    backingCall.cancel()
+  }
+
+  override fun execute(): Response<NetworkResponse<S, E>> {
+    val retrofitResponse = backingCall.execute()
+    val networkResponse = retrofitResponse.asNetworkResponse(successBodyType, errorConverter)
+    return Response.success(networkResponse)
+  }
+
+  override fun request(): Request = backingCall.request()
+
+  override fun timeout(): Timeout = backingCall.timeout()
 }

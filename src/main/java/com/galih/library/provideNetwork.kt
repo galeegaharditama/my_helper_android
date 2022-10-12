@@ -5,6 +5,7 @@ import android.content.Context
 import android.util.Log
 import com.galih.library.extension.isNetworkConnected
 import com.galih.library.remote.NetworkResponseAdapterFactory
+import com.squareup.moshi.Moshi
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Response
@@ -36,12 +37,12 @@ fun provideOkHttpClient(isDebug: Boolean, timeout: Long = 30): OkHttpClient.Buil
     .writeTimeout(timeout, TimeUnit.SECONDS)
 }
 
-fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient.Builder): Retrofit {
+fun provideRetrofit(baseUrl: String, okHttpClient: OkHttpClient.Builder, moshi: Moshi): Retrofit {
   return Retrofit.Builder()
     .client(okHttpClient.build())
     .baseUrl(baseUrl)
     .addCallAdapterFactory(NetworkResponseAdapterFactory())
-    .addConverterFactory(MoshiConverterFactory.create())
+    .addConverterFactory(MoshiConverterFactory.create(moshi))
     .build()
 }
 
@@ -81,16 +82,16 @@ class ConnectivityInterceptorImpl(context: Context) : ConnectivityInterceptor {
 private val trustAllCerts = arrayOf(object : X509TrustManager {
   @SuppressLint("TrustAllX509TrustManager")
   override fun checkClientTrusted(
-      chain: Array<out X509Certificate>?,
-      authType: String?
+    chain: Array<out X509Certificate>?,
+    authType: String?
   ) {
     // empty function
   }
 
   @SuppressLint("TrustAllX509TrustManager")
   override fun checkServerTrusted(
-      chain: Array<out X509Certificate>?,
-      authType: String?
+    chain: Array<out X509Certificate>?,
+    authType: String?
   ) {
     // empty function
   }
@@ -100,4 +101,3 @@ private val trustAllCerts = arrayOf(object : X509TrustManager {
 
 interface ConnectivityInterceptor : Interceptor
 class NoInternetException(message: String = "Tidak Ada Koneksi Internet") : IOException(message)
-class ApiResponseException(message: String) : Throwable(message)

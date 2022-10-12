@@ -20,6 +20,6 @@ package com.galih.library.permission.model
  * [resultCallback] for a permission request.
  */
 class PermissionRequest(
-    var requestCode: Int? = null,
-    var resultCallback: (PermissionResult.() -> Unit)? = null
+  var requestCode: Int? = null,
+  var resultCallback: (PermissionResult.() -> Unit)? = null
 )

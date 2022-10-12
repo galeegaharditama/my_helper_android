@@ -1,9 +1,7 @@
 package com.galih.library.validation
 
-import java.lang.NullPointerException
-
 class Validation(
-    private val models: List<ValidationModel>
+  private val models: List<ValidationModel>
 ) {
   fun get() = models
   fun getOnlyError() = models.filter { it.formErrors != ErrorValidationType.VALID }
@@ -13,7 +11,11 @@ class Validation(
 
     fun add(nameOfField: String): Builder {
       this._models.find { it.nameOfField == nameOfField }
-        ?.let { throw NameFieldDuplicateException() } ?: this._models.add(ValidationModel(nameOfField))
+        ?.let { throw NameFieldDuplicateException() } ?: this._models.add(
+        ValidationModel(
+          nameOfField
+        )
+      )
       return this
     }
 
@@ -30,5 +32,5 @@ class Validation(
 }
 
 class NameFieldDuplicateException(
-    errorMessage: String = "Name Field is Exist. Try Change the Name Field"
+  errorMessage: String = "Name Field is Exist. Try Change the Name Field"
 ) : Throwable(errorMessage)
