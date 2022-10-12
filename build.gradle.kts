@@ -1,74 +1,18 @@
-import de.fayard.refreshVersions.core.versionFor
-
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-  id("com.android.library")
-  id("kotlin-android")
-  id("kotlin-kapt")
-}
-
-group = "com.github.galeegaharditama"
-
-android {
-  compileSdk = AppConfig.compileSdk
-
-  defaultConfig {
-    minSdk = AppConfig.minSdk
-    targetSdk = AppConfig.targetSdk
-
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    consumerProguardFiles("consumer-rules.pro")
-  }
-
-  buildTypes {
-    getByName("debug")
-    getByName("release")
-    create("debugcompose")
-    create("releasecompose")
-  }
-  compileOptions {
-    sourceCompatibility(JavaVersion.VERSION_1_8)
-    targetCompatibility(JavaVersion.VERSION_1_8)
-  }
-  kotlinOptions {
-    jvmTarget = "1.8"
-  }
-  buildFeatures {
-    viewBinding = true
-    // Enables Jetpack Compose for this module
-    compose = true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = versionFor(AndroidX.compose.compiler)
-  }
+    id ("com.android.application").version("7.3.0") apply false
+    id ("com.android.library").version("7.3.0") apply false
+    id ("org.jetbrains.kotlin.android").version("1.7.10") apply false
+    id("io.gitlab.arturbosch.detekt").version("1.21.0")
 }
 
 dependencies {
-  api(Libs.timber)
-  api(Libs.koin_android)
-  api(Libs.retrofit)
-  api(Libs.logging_interceptor)
-//  api(Libs.converter_gson)
-//  api(Libs.moshi)
-  api(Libs.moshi_kotlin)
-  api(Libs.converter_moshi)
-  kapt(Libs.moshi_kotlin_codegen)
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:1.21.0")
+}
 
-  implementation(Libs.lifecycle_runtime_ktx)
-  implementation(Libs.lifecycle_viewmodel_compose)
-
-  implementation(Libs.navigation_fragment_ktx)
-  implementation("id.zelory:compressor:_")
-  implementation("cat.ereza:customactivityoncrash:_")
-
-  implementation(Libs.constraintlayout)
-  api(Libs.com_google_android_material_material)
-
-  implementation(Libs.room_runtime)
-  implementation(Libs.room_ktx)
-  kapt(Libs.room_compiler)
-
-  testImplementation(Libs.junit_junit)
-  testImplementation(Libs.mockk)
-  androidTestImplementation(Libs.androidx_test_ext_junit)
-  androidTestImplementation(Libs.espresso_core)
+detekt {
+    source = files("$projectDir")
+    config = files("config/detekt.yml")
+    buildUponDefaultConfig = true
+    autoCorrect = true
 }
